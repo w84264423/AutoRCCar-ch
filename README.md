@@ -1,4 +1,68 @@
-## AutoRCCar
+## AutoRCCar [中文]
+查看运动中的小车（YouTube视频，显示不了实属正常）
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=BBwEF6WBUQs
+" target="_blank"><img src="http://img.youtube.com/vi/BBwEF6WBUQs/0.jpg" width="360" height="240" border="10" /></a>
+
+
+这是一个用 RC 小车、树莓派、Arduino和开源软件实现的小规模的自动驾驶项目。
+系统使用了Raspberry Pi带着一个摄像头和一个用来测距的超声传感器，一个主机操作驾驶方向，物体识别（这里识别的是停止标志和红绿灯）、目标物测距，一个Arduino board用来控制小车
+
+## 依赖
+* Raspberry Pi: 
+  - Picamera
+* Computer:
+  - Numpy
+  - OpenCV 2.4.10.1
+  - Pygame
+  - PiSerial
+
+
+## 目录结构
+- raspberrt_pi
+  - stream_client.py：以jpeg格式将视频帧流式传输到主机
+  - ultrasonic_client.py：将由传感器测量的距离数据发送到主机
+- Arduino
+    - rc_keyboard_control.ino：作为rc控制器和计算机之间的接口，允许用户通过USB串行接口发送命令
+- 电脑
+  - cascade_xml
+    训练级联分类器xml文件
+  - 棋盘
+    用于校准的图像，由pi相机捕获
+  - training_data
+    以npz格式训练神经网络的图像数据
+  - testing_data
+    以npz格式测试神经网络的图像数据
+  - training_images
+    在图像训练数据采集阶段保存视频帧（可选）
+  - mlp_xml
+    在xml文件中训练神经网络参数
+  - rc_control_test.py：带键盘的驱动RC车（测试目的）
+  - picam_calibration.py：pi相机校准，返回相机矩阵
+  - collect_training_data.py：接收流式视频帧和标签框以供后续培训
+  - mlp_training.py：神经网络训练
+  - mlp_predict_test.py：用测试数据测试训练有素的神经网络
+  - rc_driver.py：多线程服务器程序接收视频帧和传感器数据，并允许RC车载驱动器本身具有停车标志，交通灯检测和前碰撞避免能力
+
+## 如何开车
+
+1. Flash Arduino：Flash “rc_keyboard_control.ino”到Arduino并运行“rc_control_test.py”来驱动rc车用键盘（测试目的）
+
+1. Pi相机校准：使用pi相机以各种角度拍摄多张棋盘图像，并将其放入“chess_board”文件夹中，运行“picam_calibration.py”，并返回相机矩阵，这些参数将用于“rc_driver.py”
+
+1. 收集培训数据和测试数据：首先运行“collect_training_data.py”，然后在raspberry pi上运行“stream_client.py”。用户按键盘驱动RC车，只有当有按键动作时才保存框架。完成驾驶后，按“q”退出，数据保存为npz文件。
+
+1. 神经网络训练：运行“mlp_training.py”，取决于所选择的参数，需要一些时间训练。培训后，参数保存在“mlp_xml”文件夹中
+
+1. 神经网络测试：运行“mlp_predict_test.py”从“test_data”文件夹加载测试数据，并从“mlp_xml”文件夹中的xml文件中训练参数
+
+1. 级联分类器训练（可选）：训练有素的停车标志和交通灯分类器包含在“cascade_xml”文件夹中，如果您有兴趣培训您自己的分类器，请参考OpenCV文档和Thorsten Ball
+
+1. 自驾驾驶：首先运行“rc_driver.py”在计算机上启动服务器，然后在raspberry pi上运行“stream_client.py”和“ultrasonic_client.py”。
+
+
+
+---
+## AutoRCCar [English]
 
 See self-driving in action
 
