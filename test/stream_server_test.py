@@ -18,9 +18,9 @@ class VideoStreamingTest(object):
     def streaming(self):
 
         try:
-            print "Connection from: ", self.client_address
-            print "Streaming..."
-            print "Press 'q' to exit"
+            print("Connection from: ", self.client_address)
+            print("Streaming...")
+            print("Press 'q' to exit")
 
             stream_bytes = ' '
             while True:

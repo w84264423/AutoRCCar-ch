@@ -6,7 +6,7 @@ import glob
 import sys
 from sklearn.model_selection import train_test_split
 
-print 'Loading training data...'
+print('Loading training data...')
 e0 = cv2.getTickCount()
 
 # load training data
@@ -16,7 +16,7 @@ training_data = glob.glob('training_data/*.npz')
 
 # if no data, exit
 if not training_data:
-    print "No training data in directory, exit"
+    print("No training data in directory, exit")
     sys.exit()
 
 for single_npz in training_data:
@@ -28,12 +28,12 @@ for single_npz in training_data:
 
 X = image_array[1:, :]
 y = label_array[1:, :]
-print 'Image array shape: ', X.shape
-print 'Label array shape: ', y.shape
+print('Image array shape: ', X.shape)
+print('Label array shape: ', y.shape)
 
 e00 = cv2.getTickCount()
 time0 = (e00 - e0)/ cv2.getTickFrequency()
-print 'Loading image duration:', time0
+print('Loading image duration:', time0)
 
 # train test split, 7:3
 train, test, train_labels, test_labels = train_test_split(X, y, test_size=0.3)
@@ -52,13 +52,13 @@ params = dict(term_crit = criteria,
                bp_dw_scale = 0.001,
                bp_moment_scale = 0.0 )
 
-print 'Training MLP ...'
+print('Training MLP ...')
 num_iter = model.train(train, train_labels, None, params = params)
 
 # set end time
 e2 = cv2.getTickCount()
 time = (e2 - e1)/cv2.getTickFrequency()
-print 'Training duration:', time
+print('Training duration:', time)
 #print 'Ran for %d iterations' % num_iter
 
 # train data
@@ -67,7 +67,7 @@ prediction_0 = resp_0.argmax(-1)
 true_labels_0 = train_labels.argmax(-1)
 
 train_rate = np.mean(prediction_0 == true_labels_0)
-print 'Train accuracy: ', "{0:.2f}%".format(train_rate * 100)
+print('Train accuracy: ', "{0:.2f}%".format(train_rate * 100))
 
 # test data
 ret_1, resp_1 = model.predict(test)
@@ -75,7 +75,7 @@ prediction_1 = resp_1.argmax(-1)
 true_labels_1 = test_labels.argmax(-1)
 
 test_rate = np.mean(prediction_1 == true_labels_1)
-print 'Test accuracy: ', "{0:.2f}%".format(test_rate * 100)
+print('Test accuracy: ', "{0:.2f}%".format(test_rate * 100))
 
 # save model
 model.save('mlp_xml/mlp.xml')

@@ -59,7 +59,9 @@
 
 1. 自驾驾驶：首先运行“rc_driver.py”在计算机上启动服务器，然后在raspberry pi上运行“stream_client.py”和“ultrasonic_client.py”。
 
+> 原项目是适用于python 2.7 本项目改成适用于 python3
 
+> test 文件夹下讲解不丰富，待改进
 
 ---
 ## AutoRCCar [English]

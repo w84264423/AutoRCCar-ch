@@ -1,7 +1,7 @@
 __author__ = 'zhengwang'
 
 import threading
-import SocketServer
+import socketserver
 import serial
 import cv2
 import numpy as np
@@ -126,7 +126,7 @@ class ObjectDetection(object):
         return v
 
 
-class SensorDataHandler(SocketServer.BaseRequestHandler):
+class SensorDataHandler(socketserver.BaseRequestHandler):
 
     data = " "
 
@@ -137,12 +137,12 @@ class SensorDataHandler(SocketServer.BaseRequestHandler):
                 self.data = self.request.recv(1024)
                 sensor_data = round(float(self.data), 1)
                 #print "{} sent:".format(self.client_address[0])
-                print sensor_data
+                print(sensor_data)
         finally:
-            print "Connection closed on thread 2"
+            print("Connection closed on thread 2")
 
 
-class VideoStreamHandler(SocketServer.StreamRequestHandler):
+class VideoStreamHandler(socketserver.StreamRequestHandler):
 
     # h1: stop sign
     h1 = 15.5 - 10  # cm
@@ -227,7 +227,7 @@ class VideoStreamHandler(SocketServer.StreamRequestHandler):
                         self.stop_finish = cv2.getTickCount()
 
                         self.stop_time = (self.stop_finish - self.stop_start)/cv2.getTickFrequency()
-                        print "Stop time: %.2fs" % self.stop_time
+                        print("Stop time: %.2fs" % self.stop_time)
 
                         # 5 seconds later, continue driving
                         if self.stop_time > 5:
@@ -269,17 +269,17 @@ class VideoStreamHandler(SocketServer.StreamRequestHandler):
             cv2.destroyAllWindows()
 
         finally:
-            print "Connection closed on thread 1"
+            print("Connection closed on thread 1")
 
 
 class ThreadServer(object):
 
     def server_thread(host, port):
-        server = SocketServer.TCPServer((host, port), VideoStreamHandler)
+        server = socketserver.TCPServer((host, port), VideoStreamHandler)
         server.serve_forever()
 
     def server_thread2(host, port):
-        server = SocketServer.TCPServer((host, port), SensorDataHandler)
+        server = socketserver.TCPServer((host, port), SensorDataHandler)
         server.serve_forever()
 
     distance_thread = threading.Thread(target=server_thread2, args=('192.168.1.100', 8002))
