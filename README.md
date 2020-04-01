@@ -63,6 +63,9 @@
 
 > test 文件夹下讲解不丰富，待改进
 
+## other doc
+https://zhengludwig.wordpress.com/projects/self-driving-rc-car/
+
 ---
 ## AutoRCCar [English]
 
